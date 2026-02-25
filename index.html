@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Bill — Patient Travel & Others</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Outfit:wght@400;500;600;700;800&family=Bebas+Neue&family=Cormorant+Garamond:wght@600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0f; --surface: #12121a; --surface2: #1a1a28; --surface3: #0f0f1e;
+    --border: #2a2a40; --accent: #7c6aff; --accent2: #ff6a7c; --accent3: #6affb8;
+    --text: #e8e8f0; --muted: #6868a0;
+    --car: #7c6aff; --bike: #ffb86a; --truck: #6affb8; --cartruck: #ff6a7c;
+  }
+  body { font-family: 'DM Mono', monospace; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(124,106,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(124,106,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px; pointer-events: none; z-index: 0;
+  }
+  body::after {
+    content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(ellipse at 20% 20%, rgba(124,106,255,0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(255,106,124,0.06) 0%, transparent 50%);
+    pointer-events: none; z-index: 0; animation: bgShift 20s ease-in-out infinite alternate;
+  }
+  @keyframes bgShift { 0% { transform: translate(0,0); } 100% { transform: translate(2%,2%); } }
+
+  .app { position: relative; z-index: 1; max-width: 1300px; margin: 0 auto; padding: 0 24px 80px; }
+
+  header { padding: 48px 0 40px; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 20px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
+  .logo-area h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,5vw,3.8rem); font-weight: 700; letter-spacing: 4px; line-height: 1; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-style: normal; text-transform: uppercase; }
+  .logo-area p { color: var(--muted); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; }
+  .header-date { text-align: right; color: var(--muted); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; }
+
+  /* Tabs */
+  .tab-bar { display: flex; gap: 8px; margin-bottom: 32px; border-bottom: 1px solid var(--border); }
+  .tab-btn { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 14px 28px; background: none; border: none; border-bottom: 3px solid transparent; color: var(--muted); cursor: pointer; transition: all 0.2s; margin-bottom: -1px; }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn.tab-others.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+
+  /* Stats */
+  .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 40px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; position: relative; overflow: hidden; transition: transform 0.2s, border-color 0.2s; }
+  .stat-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); opacity: 0; transition: opacity 0.2s; }
+  .stat-card:hover::before { opacity: 1; }
+  .stat-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .stat-value { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--text); }
+  .stat-value.total { color: var(--accent3); }
+
+  /* Charts */
+  .charts-section { margin-bottom: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 800px) { .charts-section { grid-template-columns: 1fr; } }
+  .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; }
+  .chart-card h3 { font-family: 'Syne', sans-serif; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+  .bar-chart { display: flex; flex-direction: column; gap: 10px; }
+  .bar-item { display: flex; align-items: center; gap: 12px; }
+  .bar-label { font-size: 0.82rem; font-family: 'Outfit', sans-serif; font-weight: 500; color: var(--text); width: 110px; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+  .bar-val { font-size: 0.78rem; font-family: 'Outfit', sans-serif; font-weight: 600; color: var(--text); width: 70px; text-align: right; flex-shrink: 0; }
+  .mode-chart { display: flex; gap: 8px; flex-wrap: wrap; }
+  .mode-block { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; min-width: 70px; }
+  .mode-arc { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; transition: transform 0.2s; }
+  .mode-arc:hover { transform: scale(1.1); }
+  .mode-arc-label { font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+  .mode-arc-count { font-size: 0.7rem; color: var(--muted); }
+
+  /* Action bar */
+  .action-bar { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; align-items: center; }
+  .btn-add { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 14px 28px; background: linear-gradient(135deg, var(--accent), #9b6aff); border: none; border-radius: 12px; color: white; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+  .btn-add.others-add { background: linear-gradient(135deg, var(--accent2), #ff9b6a); }
+  .btn-add:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124,106,255,0.4); }
+  .search-box { flex: 1; min-width: 200px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 13px 18px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
+  .search-box:focus { border-color: var(--accent); }
+  .search-box::placeholder { color: var(--muted); }
+  .filter-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 13px 18px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(124,106,255,0.08); }
+  .io-bar { display: flex; gap: 10px; flex-wrap: wrap; }
+  .io-btn { background: none; border: 1px solid var(--border); border-radius: 10px; padding: 8px 16px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.15s; }
+  .io-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+
+  /* ===== PATIENT TABLE ===== */
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 32px; }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--surface2); border-bottom: 1px solid var(--border); }
+  th { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 16px 20px; text-align: left; font-weight: 400; white-space: nowrap; }
+  th.sortable { cursor: pointer; transition: color 0.15s; }
+  th.sortable:hover { color: var(--accent); }
+
+  /* Patient summary row */
+  .patient-row { border-bottom: 1px solid rgba(42,42,64,0.5); transition: background 0.15s; cursor: pointer; }
+  .patient-row:hover { background: rgba(124,106,255,0.05); }
+  .patient-row.expanded { background: rgba(124,106,255,0.07); border-bottom: none; }
+  .patient-row td { padding: 18px 20px; vertical-align: middle; }
+
+  .pt-name { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--text); letter-spacing: 0.2px; }
+  .pt-meta { font-size: 0.68rem; color: var(--muted); margin-top: 3px; font-family: 'DM Mono', monospace; }
+
+  .visit-count-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(124,106,255,0.12); border: 1px solid rgba(124,106,255,0.25); border-radius: 8px; padding: 4px 10px; font-size: 0.7rem; color: var(--accent); }
+  .total-cost-badge { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--accent3); }
+  .pending-cost { font-size: 0.7rem; color: var(--bike); font-style: italic; margin-top: 2px; }
+
+  .view-btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 8px 18px; border: 1px solid var(--accent); border-radius: 10px; color: var(--accent); background: rgba(124,106,255,0.08); cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  .view-btn:hover { background: rgba(124,106,255,0.2); box-shadow: 0 4px 16px rgba(124,106,255,0.2); }
+  .view-btn.open { background: rgba(124,106,255,0.25); }
+  .chevron { display: inline-block; transition: transform 0.25s; font-style: normal; }
+  .view-btn.open .chevron { transform: rotate(180deg); }
+
+  .icon-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; color: var(--muted); font-size: 0.8rem; transition: all 0.15s; }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .icon-btn.del:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  /* Expanded visits panel */
+  .visits-row { display: none; }
+  .visits-row.open { display: table-row; }
+  .visits-panel { background: var(--surface3); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 0; }
+
+  .visits-inner { padding: 20px 24px 24px; }
+  .visits-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+  .visits-title { font-family: 'Syne', sans-serif; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .btn-add-visit { font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 8px 18px; background: linear-gradient(135deg, var(--accent), #9b6aff); border: none; border-radius: 8px; color: white; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-add-visit:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124,106,255,0.35); }
+
+  .visits-table { width: 100%; border-collapse: collapse; }
+  .visits-table th { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 10px 14px; text-align: left; font-weight: 400; border-bottom: 1px solid var(--border); background: transparent; }
+  .visits-table td { padding: 12px 14px; font-size: 0.8rem; border-bottom: 1px solid rgba(42,42,64,0.4); vertical-align: middle; }
+  .visits-table tr:last-child td { border-bottom: none; }
+  .visits-table tr { animation: rowIn 0.25s ease both; }
+  @keyframes rowIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+  .visits-table tr:hover td { background: rgba(124,106,255,0.04); }
+
+  .date-cell { color: var(--muted); font-size: 0.75rem; }
+  .passengers-cell { display: flex; flex-wrap: wrap; gap: 4px; max-width: 220px; }
+  .passenger-tag { background: rgba(124,106,255,0.15); border: 1px solid rgba(124,106,255,0.3); border-radius: 6px; padding: 2px 8px; font-size: 0.65rem; color: var(--accent); white-space: nowrap; }
+  .mode-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 8px; font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+  .mode-CAR { background: rgba(124,106,255,0.15); color: var(--car); border: 1px solid rgba(124,106,255,0.25); }
+  .mode-BIKE { background: rgba(255,184,106,0.15); color: var(--bike); border: 1px solid rgba(255,184,106,0.25); }
+  .mode-TRUCK { background: rgba(106,255,184,0.15); color: var(--truck); border: 1px solid rgba(106,255,184,0.25); }
+  .mode-CAR_TRUCK { background: rgba(255,106,124,0.15); color: var(--cartruck); border: 1px solid rgba(255,106,124,0.25); }
+  .cost-cell { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--accent3); }
+  .cost-breakdown { font-size: 0.62rem; color: var(--muted); font-style: italic; margin-top: 2px; }
+  .pending-badge { background: rgba(255,184,106,0.15); border: 1px solid rgba(255,184,106,0.3); border-radius: 6px; padding: 2px 8px; font-size: 0.6rem; color: var(--bike); letter-spacing: 1px; text-transform: uppercase; }
+
+  .visits-summary { margin-top: 16px; padding: 14px 16px; background: rgba(124,106,255,0.06); border: 1px solid rgba(124,106,255,0.15); border-radius: 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
+  .visits-summary-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-right: auto; }
+  .visits-total { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--accent3); }
+
+  /* Total bar */
+  .total-bar { background: linear-gradient(135deg, rgba(124,106,255,0.12), rgba(255,106,124,0.08)); border: 1px solid rgba(124,106,255,0.3); border-radius: 16px; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .total-formula { font-size: 0.72rem; color: var(--muted); line-height: 1.8; max-width: 700px; font-style: italic; }
+  .total-amount { font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, var(--accent3), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; white-space: nowrap; }
+  .total-label { font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+
+  /* Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,15,0.85); backdrop-filter: blur(8px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 40px; width: 100%; max-width: 580px; max-height: 90vh; overflow-y: auto; transform: translateY(20px) scale(0.97); transition: transform 0.25s; position: relative; }
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+  .modal h2 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .modal-patient-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--accent3); margin-bottom: 4px; }
+  .modal p.sub { color: var(--muted); font-size: 0.72rem; margin-bottom: 28px; letter-spacing: 1px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  input, select, textarea { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.85rem; outline: none; transition: border-color 0.2s; width: 100%; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  select option { background: var(--surface2); }
+  .cost-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; }
+  .cost-plus { color: var(--muted); font-size: 1.2rem; text-align: center; }
+  .cost-total-preview { background: rgba(124,106,255,0.08); border: 1px solid rgba(124,106,255,0.2); border-radius: 10px; padding: 10px 16px; font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--accent3); text-align: center; margin-top: 8px; }
+  .passenger-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .passenger-pill { display: flex; align-items: center; gap: 6px; background: rgba(124,106,255,0.15); border: 1px solid rgba(124,106,255,0.3); border-radius: 8px; padding: 6px 12px; font-size: 0.75rem; color: var(--accent); cursor: pointer; transition: all 0.15s; }
+  .passenger-pill.selected { background: rgba(124,106,255,0.35); border-color: var(--accent); color: white; }
+  .passenger-pill:hover { background: rgba(124,106,255,0.25); }
+  .custom-passenger { display: flex; gap: 8px; margin-top: 8px; }
+  .form-actions { display: flex; gap: 12px; margin-top: 28px; justify-content: flex-end; }
+  .btn-cancel { background: none; border: 1px solid var(--border); border-radius: 10px; padding: 12px 24px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.8rem; cursor: pointer; transition: all 0.15s; }
+  .btn-cancel:hover { border-color: var(--accent2); color: var(--accent2); }
+  .btn-save { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; padding: 12px 28px; background: linear-gradient(135deg, var(--accent), #9b6aff); border: none; border-radius: 10px; color: white; cursor: pointer; transition: all 0.2s; }
+  .btn-save:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,106,255,0.35); }
+  .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; color: var(--muted); cursor: pointer; font-size: 0.9rem; transition: all 0.15s; }
+  .close-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  /* Patient name modal */
+  .modal-new-patient { display: flex; flex-direction: column; gap: 16px; }
+
+  /* Others tab - flat list like before */
+  .others-table td { padding: 16px 20px; font-size: 0.82rem; vertical-align: middle; }
+
+  .empty-state { text-align: center; padding: 80px 20px; color: var(--muted); }
+  .empty-state .big { font-size: 4rem; margin-bottom: 16px; }
+  .empty-state h3 { font-family: 'Syne', sans-serif; font-size: 1.3rem; color: var(--text); margin-bottom: 8px; }
+  .empty-state p { font-size: 0.8rem; }
+
+  .toast { position: fixed; bottom: 30px; right: 30px; background: var(--surface2); border: 1px solid var(--accent3); border-radius: 12px; padding: 14px 20px; font-size: 0.8rem; color: var(--accent3); z-index: 200; transform: translateY(80px); opacity: 0; transition: all 0.3s; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } .header-date { display: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo-area">
+      <h1 id="mainTitle">Credit Bill</h1>
+      <p>Patient Travel & Others</p>
+    </div>
+    <div class="header-date">
+      <div id="currentDate"></div>
+      <div style="margin-top:4px; color: var(--accent); font-size: 0.6rem;">Credit Bills System</div>
+    </div>
+  </header>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tabPatient" onclick="switchTab('patient')">🏥 Patients</button>
+    <button class="tab-btn tab-others" id="tabOthers" onclick="switchTab('others')">📋 Others</button>
+  </div>
+
+  <div class="stats-bar" id="statsBar"></div>
+  <div class="charts-section" id="chartsSection"></div>
+
+  <div class="action-bar">
+    <button class="btn-add" id="addBtn" onclick="handleAddClick()">
+      <span>+</span> <span id="addBtnLabel">Add Patient</span>
+    </button>
+    <input type="text" class="search-box" placeholder="Search by name or place..." id="searchInput" oninput="renderTable()">
+    <div class="io-bar" style="margin-left:auto;">
+      <button class="io-btn" onclick="exportData()">↓ JSON</button>
+      <button class="io-btn" onclick="exportPatientCSV()">↓ Patient CSV</button>
+      <button class="io-btn" onclick="exportOthersCSV()">↓ Others CSV</button>
+      <label class="io-btn" style="cursor:pointer;">↑ Import <input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table id="mainTable">
+      <thead id="tableHead"></thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="total-bar">
+    <div>
+      <div class="total-label" id="totalLabel">Grand Total</div>
+      <div class="total-formula" id="totalFormula"></div>
+    </div>
+    <div style="text-align:right">
+      <div class="total-amount" id="totalAmount">₹0</div>
+      <div style="font-size:0.6rem; color:var(--muted); letter-spacing:2px; margin-top:4px; text-transform:uppercase">Rupees</div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add/Edit Patient Visit -->
+<div class="modal-overlay" id="visitModal" onclick="if(event.target===this)closeVisitModal()">
+  <div class="modal">
+    <button class="close-btn" onclick="closeVisitModal()">✕</button>
+    <h2 id="visitModalTitle">Add Visit</h2>
+    <div class="modal-patient-name" id="visitModalPatientName"></div>
+    <p class="sub" id="visitModalSub">ENTER VISIT DETAILS</p>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Date of Visit</label>
+        <input type="date" id="fDate" />
+      </div>
+      <div class="form-group">
+        <label>Mode of Transport</label>
+        <select id="fMode" onchange="updateCostFields()">
+          <option value="CAR">Car</option>
+          <option value="BIKE">Bike</option>
+          <option value="TRUCK">Truck</option>
+          <option value="CAR_TRUCK">Car & Truck</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>Passengers</label>
+        <div class="passenger-pills" id="passengerPills">
+          <div class="passenger-pill" data-name="Nistara" onclick="togglePassenger(this)">Nistara</div>
+          <div class="passenger-pill" data-name="Nidhi" onclick="togglePassenger(this)">Nidhi</div>
+          <div class="passenger-pill" data-name="Yuvanesh" onclick="togglePassenger(this)">Yuvanesh</div>
+          <div class="passenger-pill" data-name="Akhila" onclick="togglePassenger(this)">Akhila</div>
+          <div class="passenger-pill" data-name="John Sir" onclick="togglePassenger(this)">John Sir</div>
+        </div>
+        <div class="custom-passenger">
+          <input type="text" id="fCustomPassenger" placeholder="Enter passenger name..." style="flex:1" />
+          <button type="button" class="btn-cancel" onclick="addCustomPassenger()" style="padding:10px 16px; white-space:nowrap; font-size:0.7rem;">Add</button>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label>Cost of Travel</label>
+        <div id="costRow"></div>
+        <div class="cost-total-preview" id="costPreview">₹0</div>
+      </div>
+      <div class="form-group full">
+        <label>Notes (optional)</label>
+        <textarea id="fNotes" rows="2" placeholder="Enter any notes here..."></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeVisitModal()">Cancel</button>
+      <button class="btn-save" onclick="saveVisit()">Save Visit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add New Patient -->
+<div class="modal-overlay" id="patientModal" onclick="if(event.target===this)closePatientModal()">
+  <div class="modal" style="max-width:420px">
+    <button class="close-btn" onclick="closePatientModal()">✕</button>
+    <h2>New Patient</h2>
+    <p class="sub">ENTER PATIENT NAME</p>
+    <div class="modal-new-patient">
+      <div class="form-group">
+        <label>Patient / Place Name</label>
+        <input type="text" id="fNewPatientName" placeholder="Enter patient name..." onkeydown="if(event.key==='Enter')saveNewPatient()" />
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closePatientModal()">Cancel</button>
+      <button class="btn-save" onclick="saveNewPatient()">Create Patient</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Others entry -->
+<div class="modal-overlay" id="othersModal" onclick="if(event.target===this)closeOthersModal()">
+  <div class="modal">
+    <button class="close-btn" onclick="closeOthersModal()">✕</button>
+    <h2 id="othersModalTitle">New Entry</h2>
+    <p class="sub">ADD OTHERS RECORD</p>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Description / Person / Place</label>
+        <input type="text" id="fOthersName" placeholder="Enter description or person name..." />
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="fOthersDate" />
+      </div>
+      <div class="form-group">
+        <label>Mode of Transport</label>
+        <select id="fOthersMode" onchange="updateOthersCostFields()">
+          <option value="CAR">Car</option>
+          <option value="BIKE">Bike</option>
+          <option value="TRUCK">Truck</option>
+          <option value="CAR_TRUCK">Car & Truck</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>Passengers</label>
+        <div class="passenger-pills" id="othersPassengerPills">
+          <div class="passenger-pill" data-name="Nistara" onclick="this.classList.toggle('selected')">Nistara</div>
+          <div class="passenger-pill" data-name="Nidhi" onclick="this.classList.toggle('selected')">Nidhi</div>
+          <div class="passenger-pill" data-name="Yuvanesh" onclick="this.classList.toggle('selected')">Yuvanesh</div>
+          <div class="passenger-pill" data-name="Akhila" onclick="this.classList.toggle('selected')">Akhila</div>
+          <div class="passenger-pill" data-name="John Sir" onclick="this.classList.toggle('selected')">John Sir</div>
+        </div>
+        <div class="custom-passenger">
+          <input type="text" id="fOthersCustomPassenger" placeholder="Enter passenger name..." style="flex:1"/>
+          <button type="button" class="btn-cancel" onclick="addOthersCustomPassenger()" style="padding:10px 16px; font-size:0.7rem;">Add</button>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label>Cost</label>
+        <div id="othersCostRow"></div>
+        <div class="cost-total-preview" id="othersCostPreview">₹0</div>
+      </div>
+      <div class="form-group full">
+        <label>Notes (optional)</label>
+        <textarea id="fOthersNotes" rows="2" placeholder="Enter any notes here..."></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeOthersModal()">Cancel</button>
+      <button class="btn-save" onclick="saveOthersEntry()">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+//  DATA STRUCTURES
+//  patientData: [ { id, name, visits: [ { id, date, passengers, mode, cost1, cost2, notes } ] } ]
+//  othersEntries: [ { id, patient, date, passengers, mode, cost1, cost2, notes } ]
+// ============================================================
+
+let activeTab = 'patient';
+let expandedPatients = new Set(); // names of expanded patients
+let editVisitState = null; // { patientIdx, visitIdx }
+let editOthersIdx = -1;
+let sortField = 'name';
+let sortDir = 1;
+
+function loadData() {
+  let pd = JSON.parse(localStorage.getItem('cb_patients_v2') || 'null');
+  let od = JSON.parse(localStorage.getItem('cb_others_v2') || '[]');
+  if (!pd) {
+    // Migrate or seed
+    pd = [
+      { id: 1, name: 'Dharmendra', visits: [
+        { id: 101, date: '2026-01-13', passengers: ['Nistara','Nidhi','Yuvanesh'], mode: 'CAR_TRUCK', cost1: 1500, cost2: 1200, notes: '' },
+        { id: 102, date: '2026-01-14', passengers: ['Nistara','Nidhi','Yuvanesh'], mode: 'CAR', cost1: 1500, cost2: 0, notes: '' },
+        { id: 103, date: '2026-01-15', passengers: ['Akhila','Nidhi','Yuvanesh'], mode: 'CAR', cost1: 1500, cost2: 0, notes: '' },
+        { id: 104, date: '2026-01-19', passengers: ['Nidhi','Yuvanesh'], mode: 'CAR', cost1: 1313, cost2: 0, notes: '' },
+        { id: 105, date: '2026-01-23', passengers: ['Yuvanesh'], mode: 'BIKE', cost1: 200, cost2: 0, notes: '' },
+        { id: 106, date: '2026-01-24', passengers: ['Yuvanesh'], mode: 'BIKE', cost1: 100, cost2: 0, notes: '' },
+      ]},
+      { id: 2, name: 'Vidhya', visits: [
+        { id: 201, date: '2026-01-28', passengers: ['Nidhi','Yuvanesh'], mode: 'CAR_TRUCK', cost1: 2000, cost2: 1200, notes: '' },
+        { id: 202, date: '2026-01-29', passengers: ['Akhila','Nidhi','Yuvanesh'], mode: 'CAR', cost1: 1200, cost2: 0, notes: '' },
+        { id: 203, date: '2026-01-30', passengers: ['Nidhi','Yuvanesh'], mode: 'CAR', cost1: 1200, cost2: 0, notes: '' },
+      ]},
+      { id: 3, name: 'Vidhya & Dharmendra', visits: [
+        { id: 301, date: '2026-02-11', passengers: ['Nidhi','Yuvanesh'], mode: 'CAR_TRUCK', cost1: 1200, cost2: 1200, notes: '' },
+      ]},
+      { id: 4, name: 'Dhilip', visits: [
+        { id: 401, date: '2026-02-18', passengers: ['Nidhi','Yuvanesh'], mode: 'TRUCK', cost1: 0, cost2: 0, notes: 'Pending' },
+      ]},
+      { id: 5, name: 'Manipal to Mangalore RS', visits: [
+        { id: 501, date: '2026-01-31', passengers: ['Akhila','Nistara','Nidhi','Yuvanesh'], mode: 'CAR', cost1: 1700, cost2: 0, notes: '' },
+        { id: 502, date: '2026-02-05', passengers: ['Akhila','Nistara','Nidhi','Yuvanesh'], mode: 'CAR', cost1: 1700, cost2: 0, notes: '(return)' },
+      ]},
+      { id: 6, name: 'Parkala to Mangalore RS', visits: [
+        { id: 601, date: '2026-01-30', passengers: ['John Sir'], mode: 'CAR', cost1: 1700, cost2: 0, notes: '' },
+        { id: 602, date: '2026-02-05', passengers: ['John Sir'], mode: 'CAR', cost1: 1800, cost2: 0, notes: '(return)' },
+      ]},
+    ];
+    saveData(pd, od);
+  }
+  return { pd, od };
+}
+
+let { pd: patientData, od: othersEntries } = loadData();
+
+function saveData(pd, od) {
+  localStorage.setItem('cb_patients_v2', JSON.stringify(pd || patientData));
+  localStorage.setItem('cb_others_v2', JSON.stringify(od || othersEntries));
+}
+
+function visitCost(v) { return (v.cost1 || 0) + (v.cost2 || 0); }
+function patientTotal(p) { return p.visits.reduce((s, v) => s + visitCost(v), 0); }
+function patientPendingCount(p) { return p.visits.filter(v => visitCost(v) === 0 || v.notes === 'Pending').length; }
+function modeLabel(m) { return { CAR: 'Car', BIKE: 'Bike', TRUCK: 'Truck', CAR_TRUCK: 'Car & Truck' }[m] || m; }
+function modeIcon(m) { return { CAR: '🚗', BIKE: '🏍', TRUCK: '🚛', CAR_TRUCK: '🚗🚛' }[m] || ''; }
+function formatDate(d) { if (!d) return '—'; const [y,mo,dy] = d.split('-'); return `${dy}/${mo}/${y}`; }
+function othersCost(e) { return (e.cost1||0) + (e.cost2||0); }
+
+// ===== TAB SWITCH =====
+function switchTab(tab) {
+  activeTab = tab;
+  chartExpanded = false;
+  document.getElementById('tabPatient').classList.toggle('active', tab === 'patient');
+  document.getElementById('tabOthers').classList.toggle('active', tab === 'others');
+  const addBtn = document.getElementById('addBtn');
+  addBtn.classList.toggle('others-add', tab === 'others');
+  document.getElementById('addBtnLabel').textContent = tab === 'patient' ? 'Add Patient' : 'Add Entry';
+  document.getElementById('totalLabel').textContent = tab === 'patient' ? 'Patient Grand Total' : 'Others Grand Total';
+  renderAll();
+}
+
+// ===== STATS =====
+function renderStats() {
+  const patTotal = patientData.reduce((s, p) => s + patientTotal(p), 0);
+  const othTotal = othersEntries.reduce((s,e)=>s+othersCost(e),0);
+  const combinedTotal = patTotal + othTotal;
+
+  if (activeTab === 'patient') {
+    const trips = patientData.reduce((s, p) => s + p.visits.length, 0);
+    const pending = patientData.reduce((s, p) => s + patientPendingCount(p), 0);
+    const thisMonth = patientData.reduce((s, p) => s + p.visits.filter(v => v.date && v.date.startsWith('2026-02')).reduce((ss, v) => ss + visitCost(v), 0), 0);
+    document.getElementById('statsBar').innerHTML = `
+      <div class="stat-card" style="border-color:rgba(106,255,184,0.3);background:linear-gradient(135deg,rgba(106,255,184,0.06),rgba(124,106,255,0.04))">
+        <div class="stat-label" style="color:var(--accent3)">Combined Total</div>
+        <div class="stat-value" style="background:linear-gradient(135deg,var(--accent3),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:2rem">₹${combinedTotal.toLocaleString()}</div>
+        <div style="font-size:0.6rem;color:var(--muted);margin-top:4px;letter-spacing:1px">Patients + Others</div>
+      </div>
+      <div class="stat-card"><div class="stat-label">Patient Total</div><div class="stat-value total">₹${patTotal.toLocaleString()}</div></div>
+      <div class="stat-card"><div class="stat-label">Patients</div><div class="stat-value">${patientData.length}</div></div>
+      <div class="stat-card"><div class="stat-label">Total Visits</div><div class="stat-value">${trips}</div></div>
+      <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-value" style="color:var(--accent)">₹${thisMonth.toLocaleString()}</div></div>
+      <div class="stat-card"><div class="stat-label">Pending Bills</div><div class="stat-value" style="color:var(--bike)">${pending}</div></div>
+    `;
+  } else {
+    const pending = othersEntries.filter(e=>othersCost(e)===0||e.notes==='Pending').length;
+    const thisMonth = othersEntries.filter(e=>e.date&&e.date.startsWith('2026-02')).reduce((s,e)=>s+othersCost(e),0);
+    document.getElementById('statsBar').innerHTML = `
+      <div class="stat-card" style="border-color:rgba(106,255,184,0.3);background:linear-gradient(135deg,rgba(106,255,184,0.06),rgba(124,106,255,0.04))">
+        <div class="stat-label" style="color:var(--accent3)">Combined Total</div>
+        <div class="stat-value" style="background:linear-gradient(135deg,var(--accent3),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:2rem">₹${combinedTotal.toLocaleString()}</div>
+        <div style="font-size:0.6rem;color:var(--muted);margin-top:4px;letter-spacing:1px">Patients + Others</div>
+      </div>
+      <div class="stat-card"><div class="stat-label">Others Total</div><div class="stat-value total">₹${othTotal.toLocaleString()}</div></div>
+      <div class="stat-card"><div class="stat-label">Entries</div><div class="stat-value">${othersEntries.length}</div></div>
+      <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-value" style="color:var(--accent)">₹${thisMonth.toLocaleString()}</div></div>
+      <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value" style="color:var(--bike)">${pending}</div></div>
+    `;
+  }
+}
+
+// ===== CHARTS =====
+let chartExpanded = false;
+
+function renderCharts() {
+  const colors = ['var(--accent)','var(--accent2)','var(--accent3)','var(--bike)','#a06aff','#6ab8ff','#ff9b6a','#6ae4ff','#c46aff','#6affc4'];
+  let allBarsData = [], modeData = {};
+  if (activeTab === 'patient') {
+    allBarsData = patientData.map(p => [p.name, patientTotal(p)]).sort((a,b)=>b[1]-a[1]);
+    patientData.forEach(p => p.visits.forEach(v => { modeData[v.mode] = (modeData[v.mode]||0)+1; }));
+  } else {
+    const byName = {};
+    othersEntries.forEach(e => { const k = e.patient; byName[k] = (byName[k]||0)+othersCost(e); });
+    allBarsData = Object.entries(byName).sort((a,b)=>b[1]-a[1]);
+    othersEntries.forEach(e => { modeData[e.mode] = (modeData[e.mode]||0)+1; });
+  }
+
+  const hasMore = allBarsData.length > 8;
+  const barsData = chartExpanded ? allBarsData : allBarsData.slice(0, 8);
+  const maxP = Math.max(...allBarsData.map(([,v])=>v), 1);
+
+  const bars = barsData.map(([k,v],i)=>`<div class="bar-item"><div class="bar-label" title="${k}">${k}</div><div class="bar-track"><div class="bar-fill" style="width:${(v/maxP*100).toFixed(1)}%;background:${colors[i%colors.length]}"></div></div><div class="bar-val">₹${v.toLocaleString()}</div></div>`).join('') || '<div style="color:var(--muted);font-size:0.75rem">No data</div>';
+
+  const viewAllBtn = hasMore ? `
+    <button onclick="toggleChartExpand()" style="
+      margin-top:14px; width:100%; background:none; border:1px solid var(--border);
+      border-radius:8px; padding:8px; color:var(--accent); font-family:'DM Mono',monospace;
+      font-size:0.7rem; letter-spacing:1px; text-transform:uppercase; cursor:pointer;
+      transition:all 0.2s;
+    " onmouseover="this.style.borderColor='var(--accent)';this.style.background='rgba(124,106,255,0.08)'"
+       onmouseout="this.style.borderColor='var(--border)';this.style.background='none'">
+      ${chartExpanded ? `▲ Show Less` : `▼ View All (${allBarsData.length})`}
+    </button>` : '';
+
+  const modeColors = { CAR:'rgba(124,106,255,0.3)', BIKE:'rgba(255,184,106,0.3)', TRUCK:'rgba(106,255,184,0.3)', CAR_TRUCK:'rgba(255,106,124,0.3)' };
+  const modeText = { CAR:'var(--car)', BIKE:'var(--bike)', TRUCK:'var(--truck)', CAR_TRUCK:'var(--cartruck)' };
+  const modes = Object.entries(modeData).map(([m,c])=>`<div class="mode-block"><div class="mode-arc" style="background:${modeColors[m]};color:${modeText[m]};border:2px solid ${modeText[m]}">${c}</div><div class="mode-arc-label">${modeLabel(m)}</div><div class="mode-arc-count">trips</div></div>`).join('') || '<div style="color:var(--muted);font-size:0.75rem">No data</div>';
+
+  document.getElementById('chartsSection').innerHTML = `
+    <div class="chart-card">
+      <h3>${activeTab==='patient'?'Cost by Patient':'Cost by Entry'}</h3>
+      <div class="bar-chart">${bars}</div>
+      ${viewAllBtn}
+    </div>
+    <div class="chart-card"><h3>Trips by Mode</h3><div class="mode-chart">${modes}</div></div>
+  `;
+}
+
+function toggleChartExpand() {
+  chartExpanded = !chartExpanded;
+  renderCharts();
+}
+
+// ===== RENDER TABLE =====
+function renderTable() {
+  if (activeTab === 'patient') renderPatientTable();
+  else renderOthersTable();
+}
+
+function renderPatientTable() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.getElementById('tableHead').innerHTML = `<tr>
+    <th class="sortable" onclick="sortBy('name')" style="width:35%">Patient / Place ↕</th>
+    <th>Visits</th>
+    <th class="sortable" onclick="sortBy('cost')" style="width:20%">Total Cost ↕</th>
+    <th style="width:140px">Actions</th>
+  </tr>`;
+
+  let filtered = patientData.filter(p => !q || p.name.toLowerCase().includes(q));
+  filtered = [...filtered].sort((a, b) => {
+    if (sortField === 'name') return a.name.localeCompare(b.name) * sortDir;
+    if (sortField === 'cost') return (patientTotal(a) - patientTotal(b)) * sortDir;
+    return 0;
+  });
+
+  if (filtered.length === 0) {
+    document.getElementById('tableBody').innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="big">🏥</div><h3>No patients found</h3><p>Add a patient to get started</p></div></td></tr>`;
+    updateTotal(0, 'Patient Grand Total');
+    return;
+  }
+
+  const rows = [];
+  filtered.forEach((p, i) => {
+    const total = patientTotal(p);
+    const pending = patientPendingCount(p);
+    const isExpanded = expandedPatients.has(p.id);
+    const pIdx = patientData.indexOf(p);
+
+    rows.push(`
+      <tr class="patient-row ${isExpanded ? 'expanded' : ''}" onclick="toggleExpand(${p.id})" style="animation:rowIn 0.3s ease ${i*0.04}s both">
+        <td>
+          <div class="pt-name">${p.name}</div>
+          <div class="pt-meta">${p.visits.length} visit${p.visits.length!==1?'s':''} · last ${p.visits.length ? formatDate(p.visits[p.visits.length-1].date) : '—'}</div>
+        </td>
+        <td><span class="visit-count-badge">📅 ${p.visits.length}</span></td>
+        <td>
+          <div class="total-cost-badge">${total > 0 ? '₹'+total.toLocaleString() : '—'}</div>
+          ${pending > 0 ? `<div class="pending-cost">⏳ ${pending} pending</div>` : ''}
+        </td>
+        <td onclick="event.stopPropagation()" style="display:flex;gap:8px;align-items:center">
+          <button class="view-btn ${isExpanded?'open':''}" onclick="toggleExpand(${p.id})" id="viewBtn_${p.id}">
+            View <i class="chevron">▾</i>
+          </button>
+          <button class="icon-btn del" onclick="deletePatient(${pIdx})" title="Delete patient">✕</button>
+        </td>
+      </tr>
+      <tr class="visits-row ${isExpanded ? 'open' : ''}" id="visitsRow_${p.id}">
+        <td colspan="4" class="visits-panel">
+          ${buildVisitsPanel(p, pIdx)}
+        </td>
+      </tr>
+    `);
+  });
+
+  document.getElementById('tableBody').innerHTML = rows.join('');
+  const grandTotal = patientData.reduce((s, p) => s + patientTotal(p), 0);
+  updateTotal(grandTotal, 'Patient Grand Total');
+}
+
+function buildVisitsPanel(p, pIdx) {
+  if (p.visits.length === 0) {
+    return `<div class="visits-inner">
+      <div class="visits-header">
+        <div class="visits-title">Visits for ${p.name}</div>
+        <button class="btn-add-visit" onclick="openVisitModal(${pIdx}, -1)">+ Add First Visit</button>
+      </div>
+      <div style="text-align:center;padding:40px 0;color:var(--muted);font-size:0.8rem">No visits yet. Add the first one!</div>
+    </div>`;
+  }
+
+  const visitRows = p.visits.map((v, vIdx) => {
+    const tc = visitCost(v);
+    const isPending = tc === 0 || v.notes === 'Pending';
+    const breakdown = v.cost2 > 0 ? `<div class="cost-breakdown">${v.cost1} + ${v.cost2}</div>` : '';
+    return `<tr style="animation-delay:${vIdx*0.04}s">
+      <td><div class="date-cell">${formatDate(v.date)}</div></td>
+      <td><div class="passengers-cell">${(v.passengers||[]).map(pp=>`<span class="passenger-tag">${pp}</span>`).join('')}</div></td>
+      <td><span class="mode-badge mode-${v.mode}">${modeIcon(v.mode)} ${modeLabel(v.mode)}</span></td>
+      <td>
+        ${isPending ? `<span class="pending-badge">Pending</span>` : `<div class="cost-cell">₹${tc.toLocaleString()}</div>${breakdown}`}
+        ${v.notes && v.notes !== 'Pending' ? `<div style="font-size:0.65rem;color:var(--muted);font-style:italic;margin-top:2px">${v.notes}</div>` : ''}
+      </td>
+      <td style="display:flex;gap:6px">
+        <button class="icon-btn" onclick="openVisitModal(${pIdx}, ${vIdx})" title="Edit">✎</button>
+        <button class="icon-btn del" onclick="deleteVisit(${pIdx}, ${vIdx})" title="Delete">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  const vTotal = patientTotal(p);
+  return `<div class="visits-inner">
+    <div class="visits-header">
+      <div class="visits-title">Visits for ${p.name}</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button class="io-btn" style="padding:7px 14px;font-size:0.65rem;" onclick="event.stopPropagation();exportSinglePatientCSV(${pIdx})">↓ CSV</button>
+        <button class="btn-add-visit" onclick="openVisitModal(${pIdx}, -1)">+ Add Visit</button>
+      </div>
+    </div>
+    <table class="visits-table">
+      <thead><tr>
+        <th style="width:110px">Date</th>
+        <th>Passengers</th>
+        <th>Transport</th>
+        <th>Cost</th>
+        <th style="width:80px">Actions</th>
+      </tr></thead>
+      <tbody>${visitRows}</tbody>
+    </table>
+    <div class="visits-summary">
+      <div class="visits-summary-label">Total for ${p.name}</div>
+      <div style="font-size:0.7rem;color:var(--muted)">${p.visits.length} visit${p.visits.length!==1?'s':''}</div>
+      <div class="visits-total">₹${vTotal.toLocaleString()}</div>
+    </div>
+  </div>`;
+}
+
+function toggleExpand(patientId) {
+  if (expandedPatients.has(patientId)) {
+    expandedPatients.delete(patientId);
+  } else {
+    expandedPatients.add(patientId);
+  }
+  renderTable();
+}
+
+// ===== OTHERS TABLE =====
+function renderOthersTable() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.getElementById('tableHead').innerHTML = `<tr>
+    <th class="sortable" onclick="sortBy('name')">Description / Person ↕</th>
+    <th class="sortable" onclick="sortBy('date')">Date ↕</th>
+    <th>Passengers</th>
+    <th>Transport</th>
+    <th class="sortable" onclick="sortBy('cost')">Cost ↕</th>
+    <th>Actions</th>
+  </tr>`;
+
+  let filtered = othersEntries.filter(e => !q || e.patient.toLowerCase().includes(q) || (e.passengers||[]).some(p=>p.toLowerCase().includes(q)));
+  filtered = [...filtered].sort((a,b) => {
+    if (sortField==='name') return a.patient.localeCompare(b.patient)*sortDir;
+    if (sortField==='date') return (a.date>b.date?1:-1)*sortDir;
+    if (sortField==='cost') return (othersCost(a)-othersCost(b))*sortDir;
+    return 0;
+  });
+
+  if (filtered.length === 0) {
+    document.getElementById('tableBody').innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="big">📋</div><h3>No entries</h3><p>Add others entries here</p></div></td></tr>`;
+    updateTotal(0, 'Others Grand Total');
+    return;
+  }
+
+  document.getElementById('tableBody').innerHTML = filtered.map((e, i) => {
+    const tc = othersCost(e);
+    const isPending = tc === 0 || e.notes === 'Pending';
+    const realIdx = othersEntries.indexOf(e);
+    const breakdown = e.cost2 > 0 ? `<div class="cost-breakdown">${e.cost1} + ${e.cost2} = ${tc}</div>` : '';
+    return `<tr class="others-table" style="animation:rowIn 0.3s ease ${i*0.03}s both">
+      <td><div class="pt-name">${e.patient}</div>${e.notes&&e.notes!=='Pending'?`<div style="font-size:0.65rem;color:var(--muted);font-style:italic;margin-top:2px">${e.notes}</div>`:''}</td>
+      <td><div class="date-cell">${formatDate(e.date)}</div></td>
+      <td><div class="passengers-cell">${(e.passengers||[]).map(p=>`<span class="passenger-tag">${p}</span>`).join('')}</div></td>
+      <td><span class="mode-badge mode-${e.mode}">${modeIcon(e.mode)} ${modeLabel(e.mode)}</span></td>
+      <td>${isPending?`<span class="pending-badge">Pending</span>`:`<div class="cost-cell">₹${tc.toLocaleString()}</div>${breakdown}`}</td>
+      <td style="display:flex;gap:8px">
+        <button class="icon-btn" onclick="openOthersModal(${realIdx})" title="Edit">✎</button>
+        <button class="icon-btn del" onclick="deleteOthersEntry(${realIdx})" title="Delete">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  updateTotal(othersEntries.reduce((s,e)=>s+othersCost(e),0), 'Others Grand Total');
+}
+
+function updateTotal(total, label) {
+  document.getElementById('totalLabel').textContent = label;
+  document.getElementById('totalAmount').textContent = '₹' + total.toLocaleString();
+  document.getElementById('totalFormula').textContent = '';
+}
+
+function sortBy(f) {
+  if (sortField === f) sortDir *= -1; else { sortField = f; sortDir = 1; }
+  renderTable();
+}
+
+// ===== ADD PATIENT BUTTON =====
+function handleAddClick() {
+  if (activeTab === 'patient') openPatientModal();
+  else openOthersModal(-1);
+}
+
+// ===== PATIENT MODAL =====
+function openPatientModal() {
+  document.getElementById('fNewPatientName').value = '';
+  document.getElementById('patientModal').classList.add('open');
+  setTimeout(() => document.getElementById('fNewPatientName').focus(), 300);
+}
+function closePatientModal() { document.getElementById('patientModal').classList.remove('open'); }
+function saveNewPatient() {
+  const name = document.getElementById('fNewPatientName').value.trim();
+  if (!name) { showToast('⚠️ Enter a patient name'); return; }
+  if (patientData.find(p => p.name.toLowerCase() === name.toLowerCase())) { showToast('⚠️ Patient already exists'); return; }
+  const newP = { id: Date.now(), name, visits: [] };
+  patientData.push(newP);
+  saveData();
+  expandedPatients.add(newP.id);
+  closePatientModal();
+  renderAll();
+  showToast(`✓ Patient "${name}" added`);
+}
+
+function deletePatient(pIdx) {
+  const p = patientData[pIdx];
+  if (!confirm(`Delete patient "${p.name}" and all ${p.visits.length} visits?`)) return;
+  expandedPatients.delete(p.id);
+  patientData.splice(pIdx, 1);
+  saveData();
+  renderAll();
+  showToast('✕ Patient deleted');
+}
+
+// ===== VISIT MODAL =====
+function openVisitModal(pIdx, vIdx) {
+  editVisitState = { pIdx, vIdx };
+  const p = patientData[pIdx];
+  const v = vIdx >= 0 ? p.visits[vIdx] : null;
+
+  document.getElementById('visitModalTitle').textContent = v ? 'Edit Visit' : 'Add Visit';
+  document.getElementById('visitModalPatientName').textContent = p.name;
+  document.getElementById('visitModalSub').textContent = v ? 'EDIT VISIT DETAILS' : 'NEW VISIT DETAILS';
+  document.getElementById('fDate').value = v ? v.date : new Date().toISOString().split('T')[0];
+  document.getElementById('fMode').value = v ? v.mode : 'CAR';
+  document.getElementById('fNotes').value = v ? (v.notes || '') : '';
+
+  document.querySelectorAll('#passengerPills .passenger-pill').forEach(pp => {
+    pp.classList.toggle('selected', v ? (v.passengers||[]).includes(pp.dataset.name) : false);
+  });
+
+  updateCostFields();
+  if (v) {
+    document.getElementById('fCost1').value = v.cost1 || '';
+    const c2 = document.getElementById('fCost2');
+    if (c2) c2.value = v.cost2 || '';
+  }
+  updateCostPreview();
+  document.getElementById('visitModal').classList.add('open');
+  setTimeout(() => document.getElementById('fDate').focus(), 200);
+}
+
+function closeVisitModal() {
+  document.getElementById('visitModal').classList.remove('open');
+  editVisitState = null;
+}
+
+function updateCostFields() {
+  const mode = document.getElementById('fMode').value;
+  const row = document.getElementById('costRow');
+  if (mode === 'CAR_TRUCK') {
+    row.innerHTML = `<div class="cost-row"><input type="number" id="fCost1" placeholder="Enter car cost..." oninput="updateCostPreview()"/><div class="cost-plus">+</div><input type="number" id="fCost2" placeholder="Enter truck cost..." oninput="updateCostPreview()"/></div>`;
+  } else {
+    row.innerHTML = `<input type="number" id="fCost1" placeholder="Enter travel cost..." oninput="updateCostPreview()" style="width:100%"/>`;
+  }
+}
+
+function updateCostPreview() {
+  const c1 = parseFloat(document.getElementById('fCost1')?.value) || 0;
+  const c2 = parseFloat(document.getElementById('fCost2')?.value) || 0;
+  document.getElementById('costPreview').textContent = `₹${(c1+c2).toLocaleString()}`;
+}
+
+function togglePassenger(el) { el.classList.toggle('selected'); }
+
+function addCustomPassenger() {
+  const val = document.getElementById('fCustomPassenger').value.trim();
+  if (!val) return;
+  const pills = document.getElementById('passengerPills');
+  const existing = [...pills.querySelectorAll('.passenger-pill')].find(p => p.dataset.name === val);
+  if (existing) { existing.classList.add('selected'); }
+  else {
+    const pill = document.createElement('div');
+    pill.className = 'passenger-pill selected'; pill.dataset.name = val; pill.textContent = val;
+    pill.onclick = () => pill.classList.toggle('selected');
+    pills.appendChild(pill);
+  }
+  document.getElementById('fCustomPassenger').value = '';
+}
+
+function saveVisit() {
+  const { pIdx, vIdx } = editVisitState;
+  const date = document.getElementById('fDate').value;
+  const mode = document.getElementById('fMode').value;
+  const notes = document.getElementById('fNotes').value.trim();
+  const cost1 = parseFloat(document.getElementById('fCost1')?.value) || 0;
+  const cost2 = parseFloat(document.getElementById('fCost2')?.value) || 0;
+  const passengers = [...document.querySelectorAll('#passengerPills .passenger-pill.selected')].map(p => p.dataset.name);
+
+  if (!date) { showToast('⚠️ Please enter a date'); return; }
+  const visit = { id: Date.now(), date, passengers, mode, cost1, cost2, notes };
+
+  if (vIdx >= 0) {
+    patientData[pIdx].visits[vIdx] = { ...patientData[pIdx].visits[vIdx], ...visit };
+    showToast('✓ Visit updated');
+  } else {
+    patientData[pIdx].visits.push(visit);
+    showToast('✓ Visit added');
+  }
+
+  saveData();
+  closeVisitModal();
+  renderAll();
+}
+
+function deleteVisit(pIdx, vIdx) {
+  const p = patientData[pIdx];
+  const v = p.visits[vIdx];
+  if (!confirm(`Delete visit on ${formatDate(v.date)}?`)) return;
+  p.visits.splice(vIdx, 1);
+  saveData();
+  renderAll();
+  showToast('✕ Visit deleted');
+}
+
+// ===== OTHERS MODAL =====
+function openOthersModal(idx) {
+  editOthersIdx = idx;
+  const e = idx >= 0 ? othersEntries[idx] : null;
+  document.getElementById('othersModalTitle').textContent = e ? 'Edit Entry' : 'New Entry';
+  document.getElementById('fOthersName').value = e ? e.patient : '';
+  document.getElementById('fOthersDate').value = e ? e.date : new Date().toISOString().split('T')[0];
+  document.getElementById('fOthersMode').value = e ? e.mode : 'CAR';
+  document.getElementById('fOthersNotes').value = e ? (e.notes||'') : '';
+  document.querySelectorAll('#othersPassengerPills .passenger-pill').forEach(pp => {
+    pp.classList.toggle('selected', e ? (e.passengers||[]).includes(pp.dataset.name) : false);
+  });
+  updateOthersCostFields();
+  if (e) {
+    document.getElementById('fOthersCost1').value = e.cost1||'';
+    const c2 = document.getElementById('fOthersCost2');
+    if (c2) c2.value = e.cost2||'';
+  }
+  updateOthersCostPreview();
+  document.getElementById('othersModal').classList.add('open');
+}
+function closeOthersModal() { document.getElementById('othersModal').classList.remove('open'); editOthersIdx = -1; }
+
+function updateOthersCostFields() {
+  const mode = document.getElementById('fOthersMode').value;
+  const row = document.getElementById('othersCostRow');
+  if (mode === 'CAR_TRUCK') {
+    row.innerHTML = `<div class="cost-row"><input type="number" id="fOthersCost1" placeholder="Enter car cost..." oninput="updateOthersCostPreview()"/><div class="cost-plus">+</div><input type="number" id="fOthersCost2" placeholder="Enter truck cost..." oninput="updateOthersCostPreview()"/></div>`;
+  } else {
+    row.innerHTML = `<input type="number" id="fOthersCost1" placeholder="Enter cost..." oninput="updateOthersCostPreview()" style="width:100%"/>`;
+  }
+}
+function updateOthersCostPreview() {
+  const c1 = parseFloat(document.getElementById('fOthersCost1')?.value)||0;
+  const c2 = parseFloat(document.getElementById('fOthersCost2')?.value)||0;
+  document.getElementById('othersCostPreview').textContent = `₹${(c1+c2).toLocaleString()}`;
+}
+function addOthersCustomPassenger() {
+  const val = document.getElementById('fOthersCustomPassenger').value.trim();
+  if (!val) return;
+  const pills = document.getElementById('othersPassengerPills');
+  const existing = [...pills.querySelectorAll('.passenger-pill')].find(p=>p.dataset.name===val);
+  if (existing) { existing.classList.add('selected'); }
+  else {
+    const pill = document.createElement('div');
+    pill.className='passenger-pill selected'; pill.dataset.name=val; pill.textContent=val;
+    pill.onclick=()=>pill.classList.toggle('selected');
+    pills.appendChild(pill);
+  }
+  document.getElementById('fOthersCustomPassenger').value='';
+}
+function saveOthersEntry() {
+  const name = document.getElementById('fOthersName').value.trim();
+  const date = document.getElementById('fOthersDate').value;
+  const mode = document.getElementById('fOthersMode').value;
+  const notes = document.getElementById('fOthersNotes').value.trim();
+  const cost1 = parseFloat(document.getElementById('fOthersCost1')?.value)||0;
+  const cost2 = parseFloat(document.getElementById('fOthersCost2')?.value)||0;
+  const passengers = [...document.querySelectorAll('#othersPassengerPills .passenger-pill.selected')].map(p=>p.dataset.name);
+  if (!name||!date) { showToast('⚠️ Fill in name and date'); return; }
+  const entry = { id: Date.now(), patient: name, date, passengers, mode, cost1, cost2, notes };
+  if (editOthersIdx >= 0) { othersEntries[editOthersIdx] = entry; showToast('✓ Entry updated'); }
+  else { othersEntries.push(entry); showToast('✓ Entry added'); }
+  saveData();
+  closeOthersModal();
+  renderAll();
+}
+function deleteOthersEntry(idx) {
+  if (!confirm(`Delete "${othersEntries[idx].patient}"?`)) return;
+  othersEntries.splice(idx, 1);
+  saveData();
+  renderAll();
+  showToast('✕ Entry deleted');
+}
+
+// ===== IMPORT / EXPORT =====
+function exportData() {
+  const blob = new Blob([JSON.stringify({ patients: patientData, others: othersEntries }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `credit-bill-${new Date().toISOString().split('T')[0]}.json`; a.click();
+  showToast('↓ JSON exported');
+}
+
+function exportPatientCSV() {
+  const rows = [['Patient/Place','Date','Passengers','Transport','Cost (₹)','Car Cost','Truck Cost','Notes']];
+  patientData.forEach(p => p.visits.forEach(v => rows.push([p.name, formatDate(v.date), (v.passengers||[]).join('; '), modeLabel(v.mode), visitCost(v), v.cost1||0, v.cost2||0, v.notes||''])));
+  const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`patient-bills-${new Date().toISOString().split('T')[0]}.csv`; a.click();
+  showToast('↓ Patient CSV exported');
+}
+
+function exportSinglePatientCSV(pIdx) {
+  const p = patientData[pIdx];
+  const rows = [
+    [`Credit Bill — ${p.name}`],
+    [`Generated: ${new Date().toLocaleDateString('en-IN')}`],
+    [],
+    ['Date','Passengers','Transport','Cost (₹)','Breakdown','Notes']
+  ];
+  p.visits.forEach(v => {
+    const tc = visitCost(v);
+    const breakdown = v.cost2 > 0 ? `Car ₹${v.cost1} + Truck ₹${v.cost2}` : '';
+    rows.push([formatDate(v.date), (v.passengers||[]).join('; '), modeLabel(v.mode), tc > 0 ? tc : 'Pending', breakdown, v.notes||'']);
+  });
+  rows.push([]);
+  rows.push(['', '', 'TOTAL', p.visits.reduce((s,v)=>s+visitCost(v),0), '', '']);
+  const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`bill-${p.name.replace(/[^a-z0-9]/gi,'_')}-${new Date().toISOString().split('T')[0]}.csv`; a.click();
+  showToast(`↓ ${p.name} CSV exported`);
+}
+
+function exportOthersCSV() {
+  const rows = [['Description','Date','Passengers','Transport','Cost (₹)','Notes']];
+  othersEntries.forEach(e=>rows.push([e.patient,formatDate(e.date),(e.passengers||[]).join('; '),modeLabel(e.mode),othersCost(e),e.notes||'']));
+  const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`others-bills-${new Date().toISOString().split('T')[0]}.csv`; a.click();
+  showToast('↓ Others CSV exported');
+}
+
+function importData(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.patients) { patientData.length = 0; data.patients.forEach(p=>patientData.push(p)); }
+      if (data.others) { othersEntries.length = 0; data.others.forEach(o=>othersEntries.push(o)); }
+      saveData(); renderAll(); showToast('↑ Data imported');
+    } catch { showToast('⚠️ Invalid file'); }
+  };
+  reader.readAsText(file);
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== INIT =====
+function renderAll() { renderStats(); renderCharts(); renderTable(); }
+
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeVisitModal(); closePatientModal(); closeOthersModal(); }
+});
+
+// Init cost fields in modals
+updateCostFields();
+updateOthersCostFields();
+
+renderAll();
+</script>
+</body>
+</html>
