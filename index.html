@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Credit Bill — Patient Travel & Others</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Outfit:wght@400;500;600;700;800&family=Bebas+Neue&family=Cormorant+Garamond:wght@600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Outfit:wght@400;500;600;700;800&family=Rajdhani:wght@700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -13,10 +13,10 @@
     --text: #e8e8f0; --muted: #6868a0;
     --car: #7c6aff; --bike: #ffb86a; --truck: #6affb8; --cartruck: #ff6a7c;
   }
-  body { font-family: 'DM Mono', monospace; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
   body::before {
     content: ''; position: fixed; inset: 0;
-    background-image: linear-gradient(rgba(124,106,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(124,106,255,0.04) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(124,106,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(124,106,255,0.02) 1px, transparent 1px);
     background-size: 60px 60px; pointer-events: none; z-index: 0;
   }
   body::after {
@@ -29,9 +29,9 @@
   .app { position: relative; z-index: 1; max-width: 1300px; margin: 0 auto; padding: 0 24px 80px; }
 
   header { padding: 48px 0 40px; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 20px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
-  .logo-area h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,5vw,3.8rem); font-weight: 700; letter-spacing: 4px; line-height: 1; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-style: normal; text-transform: uppercase; }
-  .logo-area p { color: var(--muted); font-size: 1.25rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; }
-  .header-date { text-align: right; color: var(--muted); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; }
+  .logo-area h1 { font-family: 'Rajdhani', sans-serif; font-size: clamp(2.5rem,6vw,4.4rem); font-weight: 700; letter-spacing: 6px; line-height: 1; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-style: normal; text-transform: uppercase; }
+  .logo-area p { color: var(--muted); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; font-family: 'Inter', sans-serif; font-weight: 400; }
+  .header-date { text-align: right; color: var(--muted); font-size: 0.75rem; letter-spacing: 1px; font-family: 'Inter', sans-serif; font-weight: 500; }
 
   /* Tabs */
   .tab-bar { display: flex; gap: 8px; margin-bottom: 32px; border-bottom: 1px solid var(--border); }
@@ -46,7 +46,7 @@
   .stat-card:hover { transform: translateY(-3px); border-color: var(--accent); }
   .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); opacity: 0; transition: opacity 0.2s; }
   .stat-card:hover::before { opacity: 1; }
-  .stat-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .stat-label { font-size: 0.67rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; font-family: 'Inter', sans-serif; font-weight: 600; }
   .stat-value { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--text); }
   .stat-value.total { color: var(--accent3); }
 
@@ -73,20 +73,20 @@
   .btn-add { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 14px 28px; background: linear-gradient(135deg, var(--accent), #9b6aff); border: none; border-radius: 12px; color: white; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
   .btn-add.others-add { background: linear-gradient(135deg, var(--accent2), #ff9b6a); }
   .btn-add:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124,106,255,0.4); }
-  .search-box { flex: 1; min-width: 200px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 13px 18px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
+  .search-box { flex: 1; min-width: 200px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 13px 18px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
   .search-box:focus { border-color: var(--accent); }
   .search-box::placeholder { color: var(--muted); }
   .filter-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 13px 18px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
   .filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(124,106,255,0.08); }
   .io-bar { display: flex; gap: 10px; flex-wrap: wrap; }
-  .io-btn { background: none; border: 1px solid var(--border); border-radius: 10px; padding: 8px 16px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.15s; }
+  .io-btn { background: none; border: 1px solid var(--border); border-radius: 10px; padding: 8px 16px; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.72rem; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; transition: all 0.15s; font-weight: 500; }
   .io-btn:hover { border-color: var(--accent3); color: var(--accent3); }
 
   /* ===== PATIENT TABLE ===== */
   .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 32px; }
   table { width: 100%; border-collapse: collapse; }
   thead tr { background: var(--surface2); border-bottom: 1px solid var(--border); }
-  th { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 16px 20px; text-align: left; font-weight: 400; white-space: nowrap; }
+  th { font-size: 0.67rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); padding: 16px 20px; text-align: left; font-weight: 600; font-family: 'Inter', sans-serif; white-space: nowrap; }
   th.sortable { cursor: pointer; transition: color 0.15s; }
   th.sortable:hover { color: var(--accent); }
 
@@ -97,9 +97,9 @@
   .patient-row td { padding: 18px 20px; vertical-align: middle; }
 
   .pt-name { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--text); letter-spacing: 0.2px; }
-  .pt-meta { font-size: 0.68rem; color: var(--muted); margin-top: 3px; font-family: 'DM Mono', monospace; }
+  .pt-meta { font-size: 0.73rem; color: var(--muted); margin-top: 4px; font-family: 'Inter', sans-serif; line-height: 1.5; }
 
-  .visit-count-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(124,106,255,0.12); border: 1px solid rgba(124,106,255,0.25); border-radius: 8px; padding: 4px 10px; font-size: 0.7rem; color: var(--accent); }
+  .visit-count-badge { display: inline-flex; align-items: center; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--accent); letter-spacing: -0.5px; }
   .total-cost-badge { font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--accent3); }
   .pending-cost { font-size: 0.7rem; color: var(--bike); font-style: italic; margin-top: 2px; }
 
@@ -125,17 +125,17 @@
   .btn-add-visit:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124,106,255,0.35); }
 
   .visits-table { width: 100%; border-collapse: collapse; }
-  .visits-table th { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 10px 14px; text-align: left; font-weight: 400; border-bottom: 1px solid var(--border); background: transparent; }
-  .visits-table td { padding: 12px 14px; font-size: 0.8rem; border-bottom: 1px solid rgba(42,42,64,0.4); vertical-align: middle; }
+  .visits-table th { font-size: 0.66rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); padding: 10px 14px; text-align: left; font-weight: 600; font-family: 'Inter', sans-serif; border-bottom: 1px solid var(--border); background: transparent; }
+  .visits-table td { padding: 13px 14px; font-size: 0.86rem; font-family: 'Inter', sans-serif; border-bottom: 1px solid rgba(42,42,64,0.4); vertical-align: middle; }
   .visits-table tr:last-child td { border-bottom: none; }
   .visits-table tr { animation: rowIn 0.25s ease both; }
   @keyframes rowIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
   .visits-table tr:hover td { background: rgba(124,106,255,0.04); }
 
-  .date-cell { color: var(--muted); font-size: 0.75rem; }
+  .date-cell { color: var(--muted); font-size: 0.82rem; font-family: 'Inter', sans-serif; font-weight: 500; }
   .passengers-cell { display: flex; flex-wrap: wrap; gap: 4px; max-width: 220px; }
-  .passenger-tag { background: rgba(124,106,255,0.15); border: 1px solid rgba(124,106,255,0.3); border-radius: 6px; padding: 2px 8px; font-size: 0.65rem; color: var(--accent); white-space: nowrap; }
-  .mode-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 8px; font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+  .passenger-tag { background: rgba(124,106,255,0.1); border: 1px solid rgba(124,106,255,0.22); border-radius: 6px; padding: 3px 9px; font-size: 0.74rem; font-family: 'Inter', sans-serif; font-weight: 500; color: var(--accent); white-space: nowrap; }
+  .mode-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 8px; font-size: 0.74rem; font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase; white-space: nowrap; }
   .mode-CAR { background: rgba(124,106,255,0.15); color: var(--car); border: 1px solid rgba(124,106,255,0.25); }
   .mode-BIKE { background: rgba(255,184,106,0.15); color: var(--bike); border: 1px solid rgba(255,184,106,0.25); }
   .mode-TRUCK { background: rgba(106,255,184,0.15); color: var(--truck); border: 1px solid rgba(106,255,184,0.25); }
@@ -165,20 +165,20 @@
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   .form-group { display: flex; flex-direction: column; gap: 8px; }
   .form-group.full { grid-column: 1 / -1; }
-  label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
-  input, select, textarea { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.85rem; outline: none; transition: border-color 0.2s; width: 100%; }
+  label { font-size: 0.69rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); font-family: 'Inter', sans-serif; font-weight: 600; }
+  input, select, textarea { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; width: 100%; }
   input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   select option { background: var(--surface2); }
   .cost-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; }
   .cost-plus { color: var(--muted); font-size: 1.2rem; text-align: center; }
   .cost-total-preview { background: rgba(124,106,255,0.08); border: 1px solid rgba(124,106,255,0.2); border-radius: 10px; padding: 10px 16px; font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--accent3); text-align: center; margin-top: 8px; }
   .passenger-pills { display: flex; flex-wrap: wrap; gap: 8px; }
-  .passenger-pill { display: flex; align-items: center; gap: 6px; background: rgba(124,106,255,0.15); border: 1px solid rgba(124,106,255,0.3); border-radius: 8px; padding: 6px 12px; font-size: 0.75rem; color: var(--accent); cursor: pointer; transition: all 0.15s; }
+  .passenger-pill { display: flex; align-items: center; gap: 6px; background: rgba(124,106,255,0.08); border: 1px solid rgba(124,106,255,0.22); border-radius: 8px; padding: 7px 13px; font-size: 0.84rem; font-family: 'Inter', sans-serif; font-weight: 500; color: var(--accent); cursor: pointer; transition: all 0.15s; }
   .passenger-pill.selected { background: rgba(124,106,255,0.35); border-color: var(--accent); color: white; }
   .passenger-pill:hover { background: rgba(124,106,255,0.25); }
   .custom-passenger { display: flex; gap: 8px; margin-top: 8px; }
   .form-actions { display: flex; gap: 12px; margin-top: 28px; justify-content: flex-end; }
-  .btn-cancel { background: none; border: 1px solid var(--border); border-radius: 10px; padding: 12px 24px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.8rem; cursor: pointer; transition: all 0.15s; }
+  .btn-cancel { background: none; border: 1px solid var(--border); border-radius: 10px; padding: 12px 24px; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; cursor: pointer; transition: all 0.15s; }
   .btn-cancel:hover { border-color: var(--accent2); color: var(--accent2); }
   .btn-save { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; padding: 12px 28px; background: linear-gradient(135deg, var(--accent), #9b6aff); border: none; border-radius: 10px; color: white; cursor: pointer; transition: all 0.2s; }
   .btn-save:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,106,255,0.35); }
@@ -192,11 +192,11 @@
   .others-table td { padding: 16px 20px; font-size: 0.82rem; vertical-align: middle; }
 
   .empty-state { text-align: center; padding: 80px 20px; color: var(--muted); }
-  .empty-state .big { font-size: 4rem; margin-bottom: 16px; }
+  .empty-state .big { font-size: 3rem; margin-bottom: 16px; opacity: 0.6; }
   .empty-state h3 { font-family: 'Syne', sans-serif; font-size: 1.3rem; color: var(--text); margin-bottom: 8px; }
   .empty-state p { font-size: 0.8rem; }
 
-  .toast { position: fixed; bottom: 30px; right: 30px; background: var(--surface2); border: 1px solid var(--accent3); border-radius: 12px; padding: 14px 20px; font-size: 0.8rem; color: var(--accent3); z-index: 200; transform: translateY(80px); opacity: 0; transition: all 0.3s; }
+  .toast { position: fixed; bottom: 30px; right: 30px; background: var(--surface2); border: 1px solid var(--accent3); border-radius: 12px; padding: 14px 22px; font-size: 0.84rem; font-family: 'Inter', sans-serif; font-weight: 500; color: var(--accent3); z-index: 200; transform: translateY(80px); opacity: 0; transition: all 0.3s; }
   .toast.show { transform: translateY(0); opacity: 1; }
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
@@ -219,8 +219,8 @@
   </header>
 
   <div class="tab-bar">
-    <button class="tab-btn active" id="tabPatient" onclick="switchTab('patient')">🏥 Patients</button>
-    <button class="tab-btn tab-others" id="tabOthers" onclick="switchTab('others')">📋 Others</button>
+    <button class="tab-btn active" id="tabPatient" onclick="switchTab('patient')">Patients</button>
+    <button class="tab-btn tab-others" id="tabOthers" onclick="switchTab('others')">Others</button>
   </div>
 
   <div class="stats-bar" id="statsBar"></div>
@@ -599,10 +599,10 @@ function renderPatientTable() {
           <div class="pt-name">${p.name}</div>
           <div class="pt-meta">${p.visits.length} visit${p.visits.length!==1?'s':''} · last ${p.visits.length ? formatDate(p.visits[p.visits.length-1].date) : '—'}</div>
         </td>
-        <td><span class="visit-count-badge">📅 ${p.visits.length}</span></td>
+        <td><span class="visit-count-badge">${p.visits.length}</span></td>
         <td>
           <div class="total-cost-badge">${total > 0 ? '₹'+total.toLocaleString() : '—'}</div>
-          ${pending > 0 ? `<div class="pending-cost">⏳ ${pending} pending</div>` : ''}
+          ${pending > 0 ? `<div class="pending-cost">${pending} pending</div>` : ''}
         </td>
         <td onclick="event.stopPropagation()" style="display:flex;gap:8px;align-items:center">
           <button class="view-btn ${isExpanded?'open':''}" onclick="toggleExpand(${p.id})" id="viewBtn_${p.id}">
